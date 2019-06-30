@@ -1,8 +1,13 @@
-import express from 'express'
-import { postNewTrip } from '../control/helpers'
+// import express from 'express'
+const express = require('express')
+const { postNewTrip, check } = require('../control/helpers')
+// import { postNewTrip, check } from '../control/helpers'
 const router = express.Router()
 
-router.route('/trip')
+router.route('/')
   .post(postNewTrip)
+  .get(allTrip)
+router.route('/:id')
+.get(tripsById)
 
-export default router
+module.exports = router
