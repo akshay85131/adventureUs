@@ -13,14 +13,11 @@ const postNewTrip = async (req, res) => {
   }
   console.log(req.body)
   const tripData = await  trips.create(Trip)
-  res.json('data added successfully')
+  res.json( tripData,'data added successfully')
 }
 catch (error) {
       res.json(error)
     }
-}
-const check = (req, res) =>{
-  res.json('hellooo im working fine')
 }
 
 const tripsById = async (req, res) => {
@@ -39,5 +36,15 @@ const allTrip = async (req, res) => {
     res.json(error)
   }
 }
+const updateTrip = async (req,res)=>{
+  try{
+      const datas= await profile.findOneAndUpdate({id:req.body.id},
+          {tripName:req.body.tripName},{new:true})   
+      // console.log(req.body)
+      res.json(datas)
+  }catch (error){
+      res.json(error)
+  }
+}
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip }
 
-module.exports = { postNewTrip, check }
