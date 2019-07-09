@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const passport = require("passport");
-const User = require("../models/user");
+const user = require("../models/user");
 
 const userController = {};
 
@@ -16,7 +16,7 @@ userController.register = function(req, res) {
 
 // Post registration
 userController.doRegister = function(req, res) {
-  User.register(new User({ username : req.body.username, name: req.body.name }), req.body.password, function(err, user) {
+  user.register(new user({ username : req.body.username, name: req.body.name }), req.body.password, function(err, user) {
     if (err) {
       return res.render('register', { user : user });
     }

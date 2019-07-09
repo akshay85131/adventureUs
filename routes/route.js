@@ -4,12 +4,12 @@ const { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip } = require('../
 // import { postNewTrip, check } from '../control/helpers'
 const router = express.Router()
 
-router.route('/')
+router.route('/trips')
   .post(postNewTrip)
   .get(allTrip)
   .put(updateTrip)
   
-router.route('/:id')
+router.route('/trips:id')
 .get(tripsById)
 .delete(deleteTrip)
 

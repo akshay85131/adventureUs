@@ -6,9 +6,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const tripRoutes = require('./routes/route')
 const app = express()
-var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy
-
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
 const PORT = 3000
 // import mongoose from 'mongoose'
 // import postNewTrip from './control/helpers'
@@ -30,7 +29,7 @@ passport.deserializeUser(user.deserializeUser())
 // app.get('/check', (req, res) => {
 //   res.json('hello')
 // })
-app.use('/', tripRoutes)
+app.use('/trips', tripRoutes)
 // app.post('/postNewTrip', (req, res) => {
 //   const newTrip = postNewTrip()
 // })
