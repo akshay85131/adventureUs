@@ -24,9 +24,9 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 const user =require('./models/user')
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
+passport.use(new LocalStrategy(user.authenticate()))
+passport.serializeUser(user.serializeUser())
+passport.deserializeUser(user.deserializeUser())
 // app.get('/check', (req, res) => {
 //   res.json('hello')
 // })
