@@ -12,39 +12,50 @@ const postNewTrip = async (req, res) => {
     // id: uuidv1()
   }
   console.log(req.body)
-  const tripData = await  trips.create(Trip)
-  res.json( tripData,'data added successfully')
+  const newTripData = await  trips.create(Trip)
+  res.status(200).json(`data added successfully${ newTripData.tripName }`)
 }
 catch (error) {
-      res.json(error)
+      res.status(400).json(error)
     }
 }
 
 const tripsById = async (req, res) => {
+//  const id = JSON.stringify(req.params.id)
   try {
-    const tripData = await tripS.findById(req.params.id)
-    res.json(tripData)
+    const tripData = await trips.findById(req.params.id)
+    res.status(200).json(tripData)
   } catch (error) {
-    res.json(error)
+    res.status(404).json(error)
   }
 }
 const allTrip = async (req, res) => {
   try {
-    const datas = await trip.find()
-    res.json(datas)
-  } catch (error) {
-    res.json(error)
+    const allTripsData = await trips.find()
+    res.status(200).json(allTripsData)
+  b}
+   catch (error) {
+    res.status(404).json(error)
   }
 }
 const updateTrip = async (req,res)=>{
   try{
-      const datas= await profile.findOneAndUpdate({id:req.body.id},
+      const updatedTripData= await trips.findOneAndUpdate({_id:req.body.id},
           {tripName:req.body.tripName},{new:true})   
       // console.log(req.body)
-      res.json(datas)
+      res.status(200).json(updatedTripData)
   }catch (error){
-      res.json(error)
+    res.status(404).json(error)
   }
 }
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip }
+const deleteTrip = async (req,res)=>{
+  try{
+      const deletedTrip= await trips.findOneAndDelete({_id:req.params.id})
+      res.status(200).json(`item deleted ${deletedTrip.tripName}`)
+  }catch (error){
+    res.status(404).json(error)
+  }
+}
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip }
+// module.exports =  postNewTrip 
 
