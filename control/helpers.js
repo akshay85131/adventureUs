@@ -30,10 +30,10 @@ const tripsById = async (req, res) => {
   }
 }
 const allTrip = async (req, res) => {
-  
+  try{
     const allTripsData = await trips.find()
     res.status(200).json(allTripsData)
-  .catch (error) 
+  }catch (error) 
    res.status(404).json(error)
   
 }
