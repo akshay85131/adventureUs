@@ -9,7 +9,7 @@ const app = express()
 // const passport = require('passport')
 // const cookieSession = require('cookie-session')
 // const LocalStrategy = require('passport-local').Strategy
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(cookieSession)({
