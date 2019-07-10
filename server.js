@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const tripRoutes = require('./routes/route')
 const app = express()
 const passport = require('passport')
+const cookieSession = require('cookie-session')
 const LocalStrategy = require('passport-local').Strategy
 const PORT = 3000
 // import mongoose from 'mongoose'
@@ -14,7 +15,7 @@ const PORT = 3000
 // require('./models/config')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(require('cookie-session')({
+app.use(require(cookieSession)({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
