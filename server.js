@@ -15,11 +15,11 @@ const PORT = 3000
 // require('./models/config')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(require(cookieSession)({
+app.use(cookieSession)({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
-}))
+})
 app.use(passport.initialize())
 app.use(passport.session())
 
