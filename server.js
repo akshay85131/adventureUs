@@ -14,7 +14,7 @@ const PORT = 3000
 // require('./models/config')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(require('express-session')({
+app.use(require('cookie-session')({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
@@ -26,10 +26,10 @@ const user =require('./models/user')
 passport.use(new LocalStrategy(user.authenticate()))
 passport.serializeUser(user.serializeUser())
 passport.deserializeUser(user.deserializeUser())
-// app.get('/check', (req, res) => {
+// app.get('/', (req, res) => {
 //   res.json('hello')
 // })
-app.use('/trips', tripRoutes)
+app.use('/', tripRoutes)
 // app.post('/postNewTrip', (req, res) => {
 //   const newTrip = postNewTrip()
 // })
