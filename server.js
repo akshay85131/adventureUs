@@ -34,3 +34,4 @@ app.use('/', tripRoutes)
 app.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
 })
+//everything is fine upto here
