@@ -1,48 +1,48 @@
-// const mongoose = require("mongoose");
-// const passport = require("passport");
-// const User = require('../models/user');
+// const mongoose = require('mongoose')
+// const passport = require('passport')
+// const User = require('../models/user')
 
-// const userController = {};
+// const userController = {}
 
 // // Restrict access to root page
-// userController.home = function(req, res) {
-//   res.render('index', { user : req.user });
-// };
+// userController.home = function (req, res) {
+//   res.render('index', { user: req.user })
+// }
 
 // // Go to registration page
-// userController.register = function(req, res) {
-//   res.render('register');
-// };
+// userController.register = function (req, res) {
+//   res.render('register')
+// }
 
 // // Post registration
-// userController.doRegister = function(req, res) {
-//   User.register(new user({ username : req.body.username, name: req.body.name }), req.body.password, function(err, user) {
+// userController.doRegister = function (req, res) {
+//   User.register(new user({ username: req.body.username, name: req.body.name }), req.body.password, function (err, user) {
 //     if (err) {
-//       return res.render('register', { user : user });
+//       return res.render('register', { user: user })
 //     }
 
 //     passport.authenticate('local')(req, res, function () {
-//       res.redirect('/');
-//     });
-//   });
-// };
+//       res.redirect('/')
+//     })
+//   })
+// }
 
 // // Go to login page
-// userController.login = function(req, res) {
-//   res.render('login');
-// };
+// userController.login = function (req, res) {
+//   res.render('login')
+// }
 
 // // Post login
-// userController.doLogin = function(req, res) {
+// userController.doLogin = function (req, res) {
 //   passport.authenticate('local')(req, res, function () {
-//     res.redirect('/');
-//   });
-// };
+//     res.redirect('/')
+//   })
+// }
 
 // // logout
-// userController.logout = function(req, res) {
-//   req.logout();
-//   res.redirect('/');
-// };
+// userController.logout = function (req, res) {
+//   req.logout()
+//   res.redirect('/')
+// }
 
-// module.exports = userController;
+// module.exports = userController

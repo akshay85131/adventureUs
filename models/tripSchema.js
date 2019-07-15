@@ -1,5 +1,5 @@
 // import mongoose from 'mongoose'
-const mongoose =require('mongoose')
+const mongoose = require('mongoose')
 // const itineararySchema = require('/home/anonymous/Documents/trip/models/itineararySchema.js')
 const tripSchema = new mongoose.Schema({
 
@@ -15,4 +15,4 @@ const tripSchema = new mongoose.Schema({
   }
 })
 const trips = mongoose.model('trips', tripSchema)
-module.exports =  trips
+module.exports = trips

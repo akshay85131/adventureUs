@@ -21,5 +21,4 @@ router.put('/trips/updatetrip', updateTrip)
 router.get('/trips/:id', tripsById)
 router.delete('/trips/delete/:id', deleteTrip)
 
-
 module.exports = router
