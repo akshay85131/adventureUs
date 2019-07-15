@@ -9,14 +9,14 @@ const router = express.Router()
 //   .get(allTrip)
 //   .put(updateTrip)
 
-router.get('/trips/alltrips', allTrip)
-router.post('/trips/postnewtrip', postNewTrip)
+router.get('/trips/all', allTrip)
+router.post('/trips/new', postNewTrip)
 router.put('/trips/updatetrip', updateTrip)
 
 // router.route('/:id')
 // .get(tripsById)
 // .delete(deleteTrip)
-router.get('trips/:id', tripsById)
+router.get('/trips/:id', tripsById)
 router.delete('/trips/delete/:id', deleteTrip)
 
 

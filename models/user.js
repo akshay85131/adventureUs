@@ -4,9 +4,10 @@
 
 // const UserSchema = new Schema({
 //     username: String,
-//     password: String
+//     password: String,
+//     name:String
 // });
 
 // UserSchema.plugin(passportLocalMongoose);
 
-// module.exports = mongoose.model('user', UserSchema);
+// module.exports = mongoose.model('User', UserSchema);

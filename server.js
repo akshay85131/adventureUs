@@ -1,18 +1,18 @@
-// import express from 'express'
-// import bodyParser from 'body-parser'
-// import tripRoutes from './routes/route'
-
 const express = require('express')
 const bodyParser = require('body-parser')
 const tripRoutes = require('./routes/route')
 const app = express()
-// const passport = require('passport')
-// const cookieSession = require('cookie-session')
-// const LocalStrategy = require('passport-local').Strategy
+const passport = require('passport')
+const cookieParser = require('cookie-parser')
+const LocalStrategy = require('passport-local').Strategy
 const PORT = process.env.PORT || 3000
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(cookieSession)({
+
+// var index = require('./routes/index')
+// var users = require('./routes/users')
+// app.use(cookieParser())
+// app.use(require('express-session'))({
 //   secret: 'keyboard cat',
 //   resave: false,
 //   saveUninitialized: false
@@ -20,18 +20,41 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(passport.initialize())
 // app.use(passport.session())
 
-// const user =require('./models/user')
-// passport.use(new LocalStrategy(user.authenticate()))
-// passport.serializeUser(user.serializeUser())
-// passport.deserializeUser(user.deserializeUser())
-// app.get('/', (req, res) => {
-//   res.json('hello')
+// app.use('/', index);
+// app.use('/users', users);
+// const User =require('./models/user')
+// passport.use(new LocalStrategy(User.authenticate()))
+// passport.serializeUser(User.serializeUser())
+// passport.deserializeUser(User.deserializeUser())
+
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id);
+// });
+
+// passport.deserializeUser(function(id, done) {
+//   User.findById(id, function(err, user) {
+//     done(err, user);
+//   });
+// });
+
+
+
+
+// catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
+
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
 // })
 app.use('/', tripRoutes)
-// app.post('/postNewTrip', (req, res) => {
-//   const newTrip = postNewTrip()
-// })
+
 app.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
 })
-//everything is fine upto here

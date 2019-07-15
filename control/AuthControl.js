@@ -1,6 +1,6 @@
 // const mongoose = require("mongoose");
 // const passport = require("passport");
-// const user = require("../models/user");
+// const User = require('../models/user');
 
 // const userController = {};
 
@@ -16,7 +16,7 @@
 
 // // Post registration
 // userController.doRegister = function(req, res) {
-//   user.register(new user({ username : req.body.username, name: req.body.name }), req.body.password, function(err, user) {
+//   User.register(new user({ username : req.body.username, name: req.body.name }), req.body.password, function(err, user) {
 //     if (err) {
 //       return res.render('register', { user : user });
 //     }

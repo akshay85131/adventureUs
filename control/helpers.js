@@ -13,9 +13,8 @@ const postNewTrip = async (req, res) => {
   }
   console.log(req.body)
   const newTripData = await  trips.create(Trip)
-  res.status(200).json(`data added successfully${ newTripData.tripName }`)
-}
-catch (error) {
+  res.status(200).json(`data added successfully${ newTripData.tripName }`) // i hav to semd id 
+}catch (error) {
       res.status(400).json(error)
     }
 }
