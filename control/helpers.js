@@ -2,7 +2,7 @@
 // import { trips } from '../models/config'
 const { trips } = require('../models/config')
 // const uuidv1 = require('uuid/v1')
-
+let difference
 const postNewTrip = async (req, res) => {
   // console.log(req)
   try {
@@ -14,12 +14,20 @@ const postNewTrip = async (req, res) => {
     }
     console.log(req.body)
     const newTripData = await trips.create(Trip)
+    difference = dateDiffInDays(newTripData.startDate, newTripData.endDate)
+
     res.status(200).json(`data added successfully${newTripData.tripName}`) // i hav to semd id
   } catch (error) {
     res.status(400).json(error)
   }
 }
+const _MS_PER_DAY = 1000 * 60 * 60 * 24
+function dateDiffInDays (a, b) {
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
 
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY)
+}
 const tripsById = async (req, res) => {
 //  const id = JSON.stringify(req.params.id)
   try {
@@ -65,20 +73,25 @@ const deleteTrip = async (req, res) => {
 // }
 // // const a = new Date("2017-01-01"),
 // //     b = new Date("2017-07-25"),
-//     difference = dateDiffInDays(newTripData.startDate, newTripData.endDate)
+// let difference = dateDiffInDays(newTripData.startDate, newTripData.endDate)
 
 const createItinearary = async (req, res) => {
+  const itineraryArray = []
   try {
-    const Itinearay = {
-      day: { type: Number },
-      date: req.body.date,
-      location: req.body.location,
-      activity: [req.body.activity]
+    for (let i = 1; i < difference; difference++) {
+      const Itinearay = {
+        day: i,
+        date: req.body.date,
+        location: req.body.location,
+        activity: req.body.activity
+      }
+      itineraryArray.push(Itinearay)
     }
-    const newTripData = await trips.create(Itinearay)
-    res.status(200).json(`data added successfully${newTripData}`) // i hav to semd id
+    const newItinerary = await trips.create(itineraryArray)
+
+    res.status(200).json(`data added successfully${newItinerary.id}`) // i hav to semd id
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400)
   }
 }
 
