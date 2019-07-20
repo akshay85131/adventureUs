@@ -2,7 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const tripRoutes = require('./routes/route')
 const app = express()
-var moment = require('moment.js')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const LocalStrategy = require('passport-local').Strategy

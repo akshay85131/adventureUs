@@ -1,6 +1,5 @@
 // import express from 'express'
 const express = require('express')
-var moment = require('moment.js')
 const { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, itinearies } = require('../control/helpers')
 // import { postNewTrip, check } from '../control/helpers'
 const router = express.Router()
