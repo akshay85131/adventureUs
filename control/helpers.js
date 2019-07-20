@@ -1,5 +1,5 @@
 const { trips } = require('../models/config')
-var moment = require('moment')
+var moment = require('moment.js')
 var difference
 const postNewTrip = async (req, res) => {
   try {
