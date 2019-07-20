@@ -105,14 +105,5 @@ const createItinearary = (difference, startDate) => {
 //   }
 // }
 
-const itinearies = async (req, res) => {
-  try {
-    const allItinearies = await trips.find()
-    res.status(200).json(allItinearies)
-  } catch (error) {
-    res.status(404).json(error)
-  }
-}
-
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, createItinearary, itinearies }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip }
 // module.exports =  postNewTrip
