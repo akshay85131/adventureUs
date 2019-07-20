@@ -1,8 +1,5 @@
-
 const { trips } = require('../models/config')
-// const mongoose = require('mongoose')
 var moment = require('moment')
-// const uuidv1 = require('uuid/v1')
 var difference
 const postNewTrip = async (req, res) => {
   try {
@@ -15,14 +12,9 @@ const postNewTrip = async (req, res) => {
       endDate: req.body.endDate,
       itinearary: []
     }
-    // id: uuidv1()
-    //  console.log(req.body)
-    // console.log(Trip.startDate)
     const newIti = createItinearary(Math.abs(difference), Trip.startDate)
     Trip.itinearary = newIti
     const newTripData = await trips.create(Trip)
-    //  console.log(newIti)
-    //  console.log('akshay')
     res.status(200).json(`data added successfully${newTripData}`) // i hav to semd id
   } catch (error) {
     res.status(400).json(error)
@@ -30,7 +22,6 @@ const postNewTrip = async (req, res) => {
 }
 
 const tripsById = async (req, res) => {
-//  const id = JSON.stringify(req.params.id)
   try {
     const tripData = await trips.findById(req.params.id)
     res.status(200).json(tripData)
@@ -78,32 +69,9 @@ const createItinearary = (difference, startDate) => {
       activity: null
     }
     itineraryArray.push(Itinearay)
-    //  console.log(itineraryArray)
   }
-
   return itineraryArray
-  // console.log(itineraryArray)
 }
-
-// const createItinearary = async (req, res) => {
-//   const itineraryArray = []
-//   try {
-//     for (let i = 1; i < difference; difference++) {
-//       const Itinearay = {
-//         day: i,
-//         date: req.body.date,
-//         location: req.body.location,
-//         activity: req.body.activity
-//       }
-//       itineraryArray.push(Itinearay)
-//     }
-//     const newItinerary = await trips.create(itineraryArray)
-
-//     res.status(200).json(`data added successfully${newItinerary.id}`) // i hav to semd id
-//   } catch (error) {
-//     res.status(400)
-//   }
-// }
 
 module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip }
 // module.exports =  postNewTrip
