@@ -1,33 +1,34 @@
-// you have to import model schema here\
-// import { trips } from '../models/config'
+
 const { trips } = require('../models/config')
+// const mongoose = require('mongoose')
+var moment = require('moment')
 // const uuidv1 = require('uuid/v1')
-let difference
+var difference
 const postNewTrip = async (req, res) => {
-  // console.log(req)
   try {
+    var start = moment(req.body.startDate, 'DD-MM-YYYY')
+    var end = moment(req.body.endDate, 'DD-MM-YYYY')
+    difference = (moment.duration(start.diff(end)).asDays())
     const Trip = {
       tripName: req.body.tripName,
-      startdate: new Date(req.body.startDate),
-      enddate: new Date(req.body.endDate)
-    // id: uuidv1()
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      itinearary: []
     }
-    console.log(req.body)
+    // id: uuidv1()
+    //  console.log(req.body)
+    // console.log(Trip.startDate)
+    const newIti = createItinearary(Math.abs(difference), Trip.startDate)
+    Trip.itinearary = newIti
     const newTripData = await trips.create(Trip)
-    difference = dateDiffInDays(newTripData.startDate, newTripData.endDate)
-
-    res.status(200).json(`data added successfully${newTripData.tripName}`) // i hav to semd id
+    //  console.log(newIti)
+    //  console.log('akshay')
+    res.status(200).json(`data added successfully${newTripData}`) // i hav to semd id
   } catch (error) {
     res.status(400).json(error)
   }
 }
-const _MS_PER_DAY = 1000 * 60 * 60 * 24
-function dateDiffInDays (a, b) {
-  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
-  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
 
-  return Math.floor((utc2 - utc1) / _MS_PER_DAY)
-}
 const tripsById = async (req, res) => {
 //  const id = JSON.stringify(req.params.id)
   try {
@@ -39,6 +40,7 @@ const tripsById = async (req, res) => {
 }
 const allTrip = async (req, res) => {
   try {
+    console.log(difference)
     const allTripsData = await trips.find()
     res.status(200).json(allTripsData)
   } catch (error) {
@@ -64,36 +66,44 @@ const deleteTrip = async (req, res) => {
   }
 }
 
-// const _MS_PER_DAY = 1000 * 60 * 60 * 24
-// function dateDiffInDays(a, b) {
-//   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
-//   const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
-
-//   return Math.floor((utc2 - utc1) / _MS_PER_DAY)
-// }
-// // const a = new Date("2017-01-01"),
-// //     b = new Date("2017-07-25"),
-// let difference = dateDiffInDays(newTripData.startDate, newTripData.endDate)
-
-const createItinearary = async (req, res) => {
+const createItinearary = (difference, startDate) => {
+  console.log(difference, startDate)
+  console.log('Im in kehooooooooooo')
   const itineraryArray = []
-  try {
-    for (let i = 1; i < difference; difference++) {
-      const Itinearay = {
-        day: i,
-        date: req.body.date,
-        location: req.body.location,
-        activity: req.body.activity
-      }
-      itineraryArray.push(Itinearay)
+  for (let i = 1; i <= difference; i++) {
+    const Itinearay = {
+      day: i,
+      date: moment(startDate, 'DD-MM-YYYY').add('days, 1'),
+      location: null,
+      activity: null
     }
-    const newItinerary = await trips.create(itineraryArray)
-
-    res.status(200).json(`data added successfully${newItinerary.id}`) // i hav to semd id
-  } catch (error) {
-    res.status(400)
+    itineraryArray.push(Itinearay)
+    //  console.log(itineraryArray)
   }
+
+  return itineraryArray
+  // console.log(itineraryArray)
 }
+
+// const createItinearary = async (req, res) => {
+//   const itineraryArray = []
+//   try {
+//     for (let i = 1; i < difference; difference++) {
+//       const Itinearay = {
+//         day: i,
+//         date: req.body.date,
+//         location: req.body.location,
+//         activity: req.body.activity
+//       }
+//       itineraryArray.push(Itinearay)
+//     }
+//     const newItinerary = await trips.create(itineraryArray)
+
+//     res.status(200).json(`data added successfully${newItinerary.id}`) // i hav to semd id
+//   } catch (error) {
+//     res.status(400)
+//   }
+// }
 
 const itinearies = async (req, res) => {
   try {
