@@ -1,6 +1,6 @@
 // import express from 'express'
 const express = require('express')
-const { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip } = require('../control/helpers')
+const { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, itineraryDataUpdate } = require('../control/helpers')
 // import { postNewTrip, check } from '../control/helpers'
 const router = express.Router()
 
@@ -10,7 +10,7 @@ const router = express.Router()
 //   .put(updateTrip)
 
 router.get('/trips/all', allTrip)
-// router.post('/trips/trip/newItinearary', createItinearary)
+router.post('/trips/newItinearary', itineraryDataUpdate)
 // router.get('/trips/trip/itinearary', itinearies)
 router.post('/trips/new', postNewTrip)
 router.put('/trips/updatetrip', updateTrip)

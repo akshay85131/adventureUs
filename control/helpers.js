@@ -59,8 +59,8 @@ const deleteTrip = async (req, res) => {
 }
 
 const createItinearary = (difference, startDate) => {
-  console.log(difference, startDate)
-  console.log('Im in kehooooooooooo')
+  // console.log(difference, startDate)
+  // console.log('Im in kehooooooooooo')
   const itineraryArray = []
   for (let i = 1; i <= difference; i++) {
     const Itinearay = {
@@ -74,5 +74,12 @@ const createItinearary = (difference, startDate) => {
   return itineraryArray
 }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip }
+const itineraryDataUpdate = (id, data) => {
+  trips.findById(id, (err, trips) => {
+    if (err) return err
+    console.log(trips)
+  })
+}
+
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, itineraryDataUpdate }
 // module.exports =  postNewTrip
