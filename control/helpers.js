@@ -83,35 +83,35 @@ const createItinearary = (difference, startDate) => {
 //   })
 // }
 
-const itineraryLocationUpdate = async (req, res) => {
-  try {
-    const updatedLocationData = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
-      { location: req.body.location }, { new: true })
-    // console.log(req.body)
-    res.status(200).json(updatedLocationData)
-  } catch (error) {
-    res.status(404).json(error)
-  }
-}
+// const itineraryLocationUpdate = async (req, res) => {
+//   try {
+//     const updatedLocationData = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
+//       { location: req.body.location }, { new: true })
+//     // console.log(req.body)
+//     res.status(200).json(updatedLocationData)
+//   } catch (error) {
+//     res.status(404).json(error)
+//   }
+// }
 
-const itineraryActivityUpdate = async (req, res) => {
-  try {
-    const neraryActivityUpdate = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
-      { activity: req.body.activity }, { new: true })
-    // console.log(req.body)
-    res.status(200).json(neraryActivityUpdate)
-  } catch (error) {
-    res.status(404).json(error)
-  }
-}
-const itineraryActivityDelete = async (req, res) => {
-  try {
-    const activityDel = await trips.itinearary.findOneAndDelete({ _id: req.params.id })
-    res.status(200).json(`item deleted ${activityDel}`)
-  } catch (error) {
-    res.status(404).json(error)
-  }
-}
+// const itineraryActivityUpdate = async (req, res) => {
+//   try {
+//     const neraryActivityUpdate = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
+//       { activity: req.body.activity }, { new: true })
+//     // console.log(req.body)
+//     res.status(200).json(neraryActivityUpdate)
+//   } catch (error) {
+//     res.status(404).json(error)
+//   }
+// }
+// const itineraryActivityDelete = async (req, res) => {
+//   try {
+//     const activityDel = await trips.itinearary.findOneAndDelete({ _id: req.params.id })
+//     res.status(200).json(`item deleted ${activityDel}`)
+//   } catch (error) {
+//     res.status(404).json(error)
+//   }
+// }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, itineraryLocationUpdate, itineraryActivityUpdate, itineraryActivityDelete }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip }
 // module.exports =  postNewTrip

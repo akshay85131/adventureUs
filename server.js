@@ -4,13 +4,13 @@ const tripRoutes = require('./routes/route')
 const app = express()
 const passport = require('passport')
 const PORT = process.env.PORT || 3000
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
 require('./control/auth')
 
 const UserModel = require('./models/user')
 const routes = require('./routes/authRoutes')
 const secureRoute = require('./routes/secureRoutes')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/', routes)
 app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute)
