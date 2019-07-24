@@ -16,7 +16,7 @@ const UserSchema = new Schema({
 })
 UserSchema.pre('save', async (next) => {
   const user = this
-  const hash = await bcrypt.hash(this.password, 10)
+  const hash = await bcrypt.hashSync(this.password, 10)
   this.password = hash
   next()
 })

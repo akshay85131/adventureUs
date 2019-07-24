@@ -8,5 +8,4 @@ router.get('/profile', (req, res, next) => {
     token: req.query.secret_token
   })
 })
-
 module.exports = router

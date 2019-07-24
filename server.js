@@ -8,6 +8,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 require('./control/auth')
 
+const UserModel = require('./models/user')
 const routes = require('./routes/authRoutes')
 const secureRoute = require('./routes/secureRoutes')
 
