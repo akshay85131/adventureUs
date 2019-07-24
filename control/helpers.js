@@ -1,5 +1,6 @@
 const { trips } = require('../models/config')
 var moment = require('moment')
+const uuidv1 = require('uuid/v1')
 // moment().format()
 var difference
 const postNewTrip = async (req, res) => {
@@ -65,6 +66,7 @@ const createItinearary = (difference, startDate) => {
   for (let i = 1; i <= difference; i++) {
     const Itinearay = {
       day: i,
+      id: uuidv1(),
       date: moment(startDate, 'DD-MM-YYYY').add('days, 1'),
       location: null,
       activity: null
@@ -74,12 +76,42 @@ const createItinearary = (difference, startDate) => {
   return itineraryArray
 }
 
-const itineraryDataUpdate = (id, data) => {
-  trips.findById(id, (err, trips) => {
-    if (err) return err
-    console.log(trips)
-  })
+// const itineraryLocationUpdate = (id, data) => {
+//   trips.findById(id, (err, trips) => {
+//     if (err) return err
+//     console.log(trips)
+//   })
+// }
+
+const itineraryLocationUpdate = async (req, res) => {
+  try {
+    const updatedLocationData = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
+      { location: req.body.location }, { new: true })
+    // console.log(req.body)
+    res.status(200).json(updatedLocationData)
+  } catch (error) {
+    res.status(404).json(error)
+  }
 }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, itineraryDataUpdate }
+const itineraryActivityUpdate = async (req, res) => {
+  try {
+    const neraryActivityUpdate = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
+      { activity: req.body.activity }, { new: true })
+    // console.log(req.body)
+    res.status(200).json(neraryActivityUpdate)
+  } catch (error) {
+    res.status(404).json(error)
+  }
+}
+const itineraryActivityDelete = async (req, res) => {
+  try {
+    const activityDel = await trips.itinearary.findOneAndDelete({ _id: req.params.id })
+    res.status(200).json(`item deleted ${activityDel}`)
+  } catch (error) {
+    res.status(404).json(error)
+  }
+}
+
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, itineraryLocationUpdate, itineraryActivityUpdate, itineraryActivityDelete }
 // module.exports =  postNewTrip

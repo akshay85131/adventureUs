@@ -10,7 +10,7 @@ const router = express.Router()
 //   .put(updateTrip)
 
 router.get('/trips/all', allTrip)
-router.post('/trips/newItinearary', itineraryDataUpdate)
+router.post('/trips/updateitinearary', itineraryDataUpdate)
 // router.get('/trips/trip/itinearary', itinearies)
 router.post('/trips/new', postNewTrip)
 router.put('/trips/updatetrip', updateTrip)
