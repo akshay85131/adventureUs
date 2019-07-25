@@ -41,10 +41,11 @@ UserSchema.pre('save', function (next) {
 // }
 
 // checking for valid password
-UserSchema.methods.isValidPassword = async (password) => {
-  // console.log('im here')
-  const user = this
-  const compare = await bcrypt.compare(password, user.password)
+UserSchema.methods.isValidPassword = async (nePassword, password) => {
+  // const user = this
+  // console.log('auth=======>' + password)
+
+  const compare = await bcrypt.compare(nePassword, password)
   console.log(compare)
   return compare
 }
