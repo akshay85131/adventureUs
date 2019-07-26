@@ -6,7 +6,7 @@ const passport = require('passport')
 const PORT = process.env.PORT || 3000
 require('./control/auth')
 
-const UserModel = require('./models/user')
+// const UserModel = require('./models/user')
 const routes = require('./routes/authRoutes')
 const secureRoute = require('./routes/secureRoutes')
 app.use(bodyParser.json())
@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/', routes)
 app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute)
-app.use('/', tripRoutes)
+app.use('/', passport.authenticate('jwt', { session: false }), tripRoutes)
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500)

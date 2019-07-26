@@ -33,12 +33,6 @@ UserSchema.pre('save', function (next) {
     })
   })
 })
-// UserSchema.methods.isValidPassword = function (candidatePassword, cb) {
-//   bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-//     if (err) return cb(err)
-//     cb(null, isMatch)
-//   })
-// }
 
 // checking for valid password
 UserSchema.methods.isValidPassword = async (nePassword, password) => {
