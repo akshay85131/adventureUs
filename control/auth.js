@@ -14,7 +14,6 @@ passport.use('signup', new localStrategy({
     console.log(user)
     return done(null, user)
   } catch (error) {
-    // console.log(error)
     done(error)
   }
 }))
@@ -34,20 +33,14 @@ passport.use('login', new localStrategy({
     if (!validate) { return done(null, false, { message: 'Wrong Password' }) }
     return done(null, user, { message: 'Logged in Successfully' })
   } catch (error) {
-    console.log(error)
     return done(error)
   }
 }))
 
 const JWTstrategy = require('passport-jwt').Strategy
-// We use this to extract the JWT sent by the user
 const ExtractJWT = require('passport-jwt').ExtractJwt
-
-// This verifies that the token sent by the user is valid
 passport.use(new JWTstrategy({
-  // secret we used to sign our JWT
   secretOrKey: 'top_secret',
-  // we expect the user to send the token as a query paramater with the name 'secret_token'
   jwtFromRequest: ExtractJWT.fromUrlQueryParameter('secret_token')
 }, async (token, done) => {
   try {
