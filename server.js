@@ -14,7 +14,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/', routes)
 app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute)
-app.use('/', passport.authenticate('jwt', { session: false }), tripRoutes)
+// app.use('/', passport.authenticate('jwt', { session: false }), tripRoutes)
+app.use('/', tripRoutes)
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500)

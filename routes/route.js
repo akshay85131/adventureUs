@@ -1,9 +1,11 @@
 // import express from 'express'
 const express = require('express')
+const { mail } = require('../control/mail')
 const { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip } = require('../control/helpers')
 const router = express.Router()
 
 router.get('/trips/all', allTrip)
+router.post('trips/sendMail', mail)
 // router.post('/trips/updateitinearary', itineraryDataUpdate)
 router.post('/trips/new', postNewTrip)
 router.put('/trips/updatetrip', updateTrip)
