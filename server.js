@@ -2,10 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const tripRoutes = require('./routes/route')
 const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
 const passport = require('passport')
 const PORT = process.env.PORT || 3000
 require('./control/auth')
-
 // const UserModel = require('./models/user')
 const routes = require('./routes/authRoutes')
 const secureRoute = require('./routes/secureRoutes')
@@ -21,6 +22,14 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500)
   res.json({ error: err })
 })
-app.listen(PORT, () => {
+
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' })
+  socket.on('my other event', function (data) {
+    console.log(data)
+  })
+})
+
+server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
 })
