@@ -1,18 +1,18 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const tripRoutes = require('./routes/route')
 const app = express()
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+// const io = require('socket.io')(server)
 const passport = require('passport')
-var cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT || 3000
-const uuid = require('uuid/v4')
+// const uuid = require('uuid/v4')
 const session = require('express-session')
-// const FileStore = require('session-file-store')(session)
-const passportLocalMongoose = require('passport-local-mongoose')
 const LocalStrategy = require('passport-local').Strategy
+// const FileStore = require('session-file-store')(session)
+// const passportLocalMongoose = require('passport-local-mongoose')
 const User = require('./models/user')
+const tripRoutes = require('./routes/route')
 // const routes = require('./routes/authRoutes')
 // const secureRoute = require('./routes/secureRoutes')
 app.use(bodyParser.json())
@@ -21,24 +21,26 @@ app.use(session({
   secret: 'Akshay13578111851171',
   resave: true,
   saveUninitialized: true
+
 }))
+app.use(cookieParser())
 // app.use(session({ secret: 'cats' }))
 app.use(passport.initialize())
 app.use(passport.session())
 // passport.use(User.createStrategy())
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
+// passport.use(new LocalStrategy(User.authenticate()))
+app.use(passport.initialize())
+app.use(passport.session())
 // app.use('/', routes)
-// app.use('/user', passport.authenticate('local'), tripRoutes)
+app.use('/user', passport.authenticate('local'), tripRoutes)
 // app.use('/', passport.authenticate('jwt', { session: false }), tripRoutes)
-
+console.log(session.id)
 // Register User
 app.post('/register', function (req, res) {
-  var password = req.body.password
-  var password2 = req.body.password2
+  const password = req.body.password
+  const password2 = req.body.password2
   if (password === password2) {
-    var newUser = new User({
+    const newUser = new User({
       name: req.body.name,
       email: req.body.email,
       username: req.body.username,
@@ -52,7 +54,7 @@ app.post('/register', function (req, res) {
     res.status(500).send("{errors: \"Passwords don't match\"}").end()
   }
 })
-// var LocalStrategy = require('passport-local').Strategy;
+// const LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(
   function (username, password, done) {
     User.getUserByUsername(username, function (err, user) {
