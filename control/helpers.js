@@ -68,8 +68,8 @@ const createItinearary = (difference, startDate) => {
       day: i,
       id: uuidv1(),
       date: moment(startDate, 'DD-MM-YYYY').add('days, 1'),
-      location: null,
-      activity: null
+      location: '',
+      activity: ''
     }
     itineraryArray.push(Itinearay)
   }

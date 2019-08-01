@@ -12,7 +12,6 @@ const tripSchema = new mongoose.Schema({
   endDate: { type: String,
     defalut: 'none',
     trim: true },
-
   days: { type: String,
     defalut: 'none',
     trim: true },
