@@ -24,17 +24,12 @@ app.use(session({
 
 }))
 app.use(cookieParser())
-// app.use(session({ secret: 'cats' }))
-app.use(passport.initialize())
-app.use(passport.session())
-// passport.use(User.createStrategy())
-// passport.use(new LocalStrategy(User.authenticate()))
 app.use(passport.initialize())
 app.use(passport.session())
 // app.use('/', routes)
-app.use('/user', passport.authenticate('local'), tripRoutes)
-// app.use('/', passport.authenticate('jwt', { session: false }), tripRoutes)
-console.log(session.id)
+// app.use('/user', passport.authenticate('local'), tripRoutes)
+app.use('/', passport.authenticate('local'), tripRoutes)
+// console.log(session.id)
 // Register User
 app.post('/register', function (req, res) {
   const password = req.body.password
@@ -86,6 +81,8 @@ passport.deserializeUser(function (id, done) {
 app.post('/login',
   passport.authenticate('local'),
   function (req, res) {
+    console.log(req.session)
+    console.log(req.session.id)
     res.send(req.user)
   }
 )
