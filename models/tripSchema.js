@@ -19,7 +19,10 @@ const tripSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  admin: { type: String,
+    defalut: 'none',
+    trim: true }
 })
 const trips = mongoose.model('trips', tripSchema)
 module.exports = trips

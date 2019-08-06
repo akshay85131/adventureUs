@@ -1,9 +1,11 @@
 const { trips } = require('../models/config')
 var moment = require('moment')
 const uuidv1 = require('uuid/v1')
+// const session = require('express-session')
+const userSession = require('../server')
 // moment().format()
 var difference
-const postNewTrip = async (req, res) => {
+const postNewTrip = async (req, res) => { 
   try {
     var start = moment(req.body.startDate, 'DD-MM-YYYY')
     var end = moment(req.body.endDate, 'DD-MM-YYYY')
@@ -12,16 +14,23 @@ const postNewTrip = async (req, res) => {
       tripName: req.body.tripName,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      itinearary: []
+      itinearary: [],
+      admin: ''
     }
     const newIti = createItinearary(Math.abs(difference), Trip.startDate)
     Trip.itinearary = newIti
+    const adminName = await trips.findById(userSession)
+    Trip.admin = adminName.name
     const newTripData = await trips.create(Trip)
     res.status(200).json(`data added successfully${newTripData}`) // i hav to semd id
   } catch (error) {
     res.status(400).json(error)
   }
 }
+// const user = userSession.findOne({  })
+
+
+
 
 const tripsById = async (req, res) => {
   try {

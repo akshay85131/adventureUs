@@ -78,15 +78,20 @@ passport.deserializeUser(function (id, done) {
   })
 })
 // Endpoint to login
+var userSession
 app.post('/login',
   passport.authenticate('local'),
   function (req, res) {
-    console.log(req.session)
-    console.log(req.session.id)
+    userSession = req.session.passport
+    // console.log(req.session)
+    // console.log(req.session.passport.user)
+    // console.log(req.session.id)
     res.send(req.user)
   }
 )
-
+// console.log('userSession ' + userSession)
+// console.log('userSession ' + userSession)
+// console.log('In the server' + session.passport.User)
 // Endpoint to get current user
 app.get('/user', function (req, res) {
   res.send(req.user)
@@ -98,8 +103,11 @@ app.get('/logout', function (req, res) {
   res.send(null)
 })
 
-// app.use('/', tripRoutes)
+app.use('/trips', passport.authenticate('local'), tripRoutes)
+// console.log('server' + session.user)
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
 })
+
+module.exports = userSession
