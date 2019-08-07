@@ -5,7 +5,7 @@ const uuidv1 = require('uuid/v1')
 const userSession = require('../server')
 // moment().format()
 var difference
-const postNewTrip = async (req, res) => { 
+const postNewTrip = async (req, res) => {
   try {
     var start = moment(req.body.startDate, 'DD-MM-YYYY')
     var end = moment(req.body.endDate, 'DD-MM-YYYY')
@@ -29,9 +29,6 @@ const postNewTrip = async (req, res) => {
 }
 // const user = userSession.findOne({  })
 
-
-
-
 const tripsById = async (req, res) => {
   try {
     const tripData = await trips.findById(req.params.id)
@@ -42,7 +39,8 @@ const tripsById = async (req, res) => {
 }
 const allTrip = async (req, res) => {
   try {
-    console.log(difference)
+    console.log('hkjhgjhg')
+
     const allTripsData = await trips.find()
     res.status(200).json(allTripsData)
   } catch (error) {
