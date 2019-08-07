@@ -28,7 +28,6 @@ app.use(passport.initialize())
 app.use(passport.session())
 // app.use('/', routes)
 // app.use('/user', passport.authenticate('local'), tripRoutes)
-app.use('/', passport.authenticate('local'), tripRoutes)
 // console.log(session.id)
 // Register User
 app.post('/register', function (req, res) {
@@ -74,6 +73,7 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (id, done) {
   User.getUserById(id, function (err, user) {
+    console.log('deeeeeeeeee' + id)
     done(err, user)
   })
 })
@@ -87,6 +87,7 @@ app.post('/login',
     // console.log(req.session.passport.user)
     // console.log(req.session.id)
     res.send(req.user)
+    // res.redirect('')
   }
 )
 // console.log('userSession ' + userSession)
@@ -96,14 +97,17 @@ app.post('/login',
 app.get('/user', function (req, res) {
   res.send(req.user)
 })
+// app.use('/', tripRoutes)
 
 // Endpoint to logout
 app.get('/logout', function (req, res) {
   req.logout()
   res.send(null)
 })
+// app.use('/', passport.authenticate('local'), tripRoutes)
 
-app.use('/trips', passport.authenticate('local'), tripRoutes)
+app.use('/', tripRoutes)
+// app.use('/', passport.authenticate('local'), tripRoutes)
 // console.log('server' + session.user)
 
 server.listen(PORT, () => {
