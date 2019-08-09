@@ -38,9 +38,8 @@ const tripsById = async (req, res) => {
   }
 }
 const allTrip = async (req, res) => {
+  console.log(req.headers.cookie, req.session)
   try {
-    console.log('hkjhgjhg')
-
     const allTripsData = await trips.find()
     res.status(200).json(allTripsData)
   } catch (error) {

@@ -9,18 +9,30 @@ const session = require('express-session')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('./models/user')
 const tripRoutes = require('./routes/route')
+const RedisStore = require('connect-redis')(session)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(session({
+  store: new RedisStore({
+    host: 'localhost',
+    port: 6379,
+    prefix: 'sess'
+  }),
+  key: 'user_sid',
   secret: 'Akshay13578111851171',
   resave: true,
   saveUninitialized: true,
-  cookie: { maxAge: 500 }
+  cookie: { maxAge: 60000 }
 }))
 app.use(cookieParser())
 app.use(passport.initialize())
 app.use(passport.session())
+
+// app.use(function printSession (req, res, next) {
+//   // console.log('req.session', req.session)
+//   return next()
+// })
 
 app.post('/register', function (req, res) {
   const password = req.body.password
@@ -65,65 +77,42 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (id, done) {
   User.getUserById(id, function (err, user) {
-    console.log('deeeeeeeeee' + id)
     done(err, user)
   })
 })
 
-var userSession
+// var userSession
 app.post('/login',
   passport.authenticate('local'),
   function (req, res) {
-    userSession = req.session.passport
+    console.log(req.session)
     res.send(req.user)
   }
 )
 
-app.get('/user', function (req, res) {
-  res.send(req.user)
-})
-// app.use('/', tripRoutes)
-
 // Endpoint to logout
 app.get('/logout', function (req, res) {
   req.logout()
-  res.clearCookie('userData')
+  res.clearCookie('user_sid')
   res.send('user logout successfully')
   // res.send(null)
 })
 
-// app.use('/', passport.authenticate('local'), tripRoutes)
-
-// function requireLogin (req, res, next) {
-//   if (req.session.loggedIn) {
-//     next()
-//   } else {
-//     // res.redirect("/login")
+// const isLoggedIn = (req, res, next) => {
+//   // if (req.isAuthenticated()) {
+//   if (req.headers.cookie === req.sesscion.key['user_sid']) {
+//     console.log('inside' + req.isAuthentcated())
+//     return next()
 //   }
+//   console.log(req.session.passport.user)
+//   // console.log(req.cookies)
+//   console.log(req.isAuthenticated())
+
+//   res.send('loggin first DUmpppp')
 // }
 
-// app.all('/trips/*', requireLogin, function (req, res, next) {
-//   next() // if the middleware allowed us to get here,
-//   // just move on to the next route handler
-// })
-
-// function authenticationMiddleware () {
-//   return function (req, res, next) {
-//     if (req.isAuthenticated()) {
-//       return next()
-//     }
-//     res.redirect('/')
-//   }
-// }
-
-const authenticationMiddleware = require('./control/middleWares/authMiddleware')
-passport.authenticationMiddleware = authenticationMiddleware
-// app.use('/trips/', tripRoutes)
-app.use('/', passport.authenticationMiddleware(), tripRoutes)
-// console.log('server' + session.user)
+app.use('/trips', tripRoutes)
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
 })
-
-module.exports = userSession
