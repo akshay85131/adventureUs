@@ -59,23 +59,26 @@ app.post('/register', function (req, res) {
   }
 })
 
-passport.use(new LocalStrategy(
-  function (username, password, done) {
-    User.getUserByUsername(username, function (err, user) {
+passport.use(new LocalStrategy({
+  usernameField: 'email'
+},
+function (email, password, done) {
+  // console.log('email' + email)
+  User.getUserByEmail(email, function (err, user) {
+    if (err) throw err
+    if (!user) {
+      return done(null, false, { message: 'Unknown User' })
+    }
+    User.comparePassword(password, user.password, function (err, isMatch) {
       if (err) throw err
-      if (!user) {
-        return done(null, false, { message: 'Unknown User' })
+      if (isMatch) {
+        return done(null, user)
+      } else {
+        return done(null, false, { message: 'Invalid password' })
       }
-      User.comparePassword(password, user.password, function (err, isMatch) {
-        if (err) throw err
-        if (isMatch) {
-          return done(null, user)
-        } else {
-          return done(null, false, { message: 'Invalid password' })
-        }
-      })
     })
-  }
+  })
+}
 ))
 passport.serializeUser(function (user, done) {
   done(null, user.id)
@@ -91,6 +94,7 @@ passport.deserializeUser(function (id, done) {
 app.post('/login',
   passport.authenticate('local'),
   function (req, res) {
+    console.log(req.body)
     // userCookie = req.headers.cookie
     // req.sessionzz= req.body.username
     // req.session.user_sid = req.headers.cookie

@@ -28,8 +28,9 @@ module.exports.createUser = function (newUser, callback) {
   })
 }
 
-module.exports.getUserByUsername = function (username, callback) {
-  const query = { username: username }
+module.exports.getUserByEmail = function (email, callback) {
+  // console.log('working' + email)
+  const query = { email }
   User.findOne(query, callback)
 }
 
