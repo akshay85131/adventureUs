@@ -9,16 +9,22 @@ const session = require('express-session')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('./models/user')
 const tripRoutes = require('./routes/route')
-const RedisStore = require('connect-redis')(session)
+require('dotenv').config()
+// const RedisStore = require('connect-redis')(session)
+const MongoStore = require('connect-mongo')(session)
 app.use(bodyParser.json())
+// const { trips } = require('../models/config')
+app.use(express.static('views'))
 app.use(bodyParser.urlencoded({ extended: true }))
-
+const mongoose = require('mongoose')
+// const RedisStore = require('connect-redis')(session)
+mongoose.connect('mongodb://localhost/trip')
 app.use(session({
-  store: new RedisStore({
-    host: 'localhost',
-    port: 6379,
-    prefix: 'sess'
-  }),
+  // store: new MongoStore({
+  //   mongooseConnection: mongoose.connection,
+  //   autoRemove: 'interval',
+  //   autoRemoveInterval: 10
+  // }),
   key: 'user_sid',
   secret: 'Akshay13578111851171',
   resave: true,
@@ -81,10 +87,13 @@ passport.deserializeUser(function (id, done) {
   })
 })
 
-// var userSession
+// var userCookie
 app.post('/login',
   passport.authenticate('local'),
   function (req, res) {
+    // userCookie = req.headers.cookie
+    // req.sessionzz= req.body.username
+    // req.session.user_sid = req.headers.cookie
     console.log(req.session)
     res.send(req.user)
   }
@@ -98,20 +107,14 @@ app.get('/logout', function (req, res) {
   // res.send(null)
 })
 
-// const isLoggedIn = (req, res, next) => {
-//   // if (req.isAuthenticated()) {
-//   if (req.headers.cookie === req.sesscion.key['user_sid']) {
-//     console.log('inside' + req.isAuthentcated())
-//     return next()
-//   }
-//   console.log(req.session.passport.user)
-//   // console.log(req.cookies)
-//   console.log(req.isAuthenticated())
+const isLoggedIn = async (req, res, next) => {
+  if (req.session.passport !== undefined) {
+    return next()
+  }
+  res.send('loggin first')
+}
 
-//   res.send('loggin first DUmpppp')
-// }
-
-app.use('/trips', tripRoutes)
+app.use('/trips', isLoggedIn, tripRoutes)
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)

@@ -78,7 +78,7 @@ const createItinearary = (difference, startDate) => {
       activity: ''
     }
     itineraryArray.push(Itinearay)
-  }
+  }POST
   return itineraryArray
 }
 
