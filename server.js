@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const server = require('http').Server(app)
+const io = require('socket.io')(server)
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const PORT = process.env.PORT || 3000
@@ -52,7 +53,8 @@ app.post('/register', function (req, res) {
     })
     User.createUser(newUser, function (err, user) {
       if (err) throw err
-      res.send(user).end()
+      // res.send(user).end()
+      res.status(201).send('user Created')
     })
   } else {
     res.status(500).send("{errors: \"Passwords don't match\"}").end()
@@ -93,29 +95,23 @@ passport.deserializeUser(function (id, done) {
 // var userCookie
 app.post('/login',
   passport.authenticate('local'),
-  function (req, res) {
-    console.log(req.body)
-    // userCookie = req.headers.cookie
-    // req.sessionzz= req.body.username
-    // req.session.user_sid = req.headers.cookie
-    console.log(req.session)
-    res.send(req.user)
+  (req, res) => {
+    res.status(200).send(req.user.name)
   }
 )
 
 // Endpoint to logout
-app.get('/logout', function (req, res) {
+app.get('/logout', (req, res) => {
   req.logout()
   res.clearCookie('user_sid')
-  res.send('user logout successfully')
-  // res.send(null)
+  res.status(200).send('user logged Out')
 })
 
 const isLoggedIn = async (req, res, next) => {
   if (req.session.passport !== undefined) {
     return next()
   }
-  res.send('loggin first')
+  res.status(401).send('loggin first')
 }
 
 app.use('/trips', isLoggedIn, tripRoutes)
