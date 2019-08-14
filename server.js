@@ -11,15 +11,26 @@ const LocalStrategy = require('passport-local').Strategy
 const User = require('./models/user')
 const tripRoutes = require('./routes/route')
 require('dotenv').config()
+// var cors = require('cors')
+
 // const RedisStore = require('connect-redis')(session)
-const MongoStore = require('connect-mongo')(session)
+// const MongoStore = require('connect-mongo')(session)
 app.use(bodyParser.json())
+app.use(function (req, res, next) {
+  console.log(req)
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+// app.use(cors())
 // const { trips } = require('../models/config')
 app.use(express.static('views'))
 app.use(bodyParser.urlencoded({ extended: true }))
 const mongoose = require('mongoose')
 // const RedisStore = require('connect-redis')(session)
 mongoose.connect('mongodb://localhost/trip')
+
 app.use(session({
   // store: new MongoStore({
   //   mongooseConnection: mongoose.connection,
@@ -43,18 +54,18 @@ app.use(passport.session())
 
 app.post('/register', function (req, res) {
   const password = req.body.password
-  const password2 = req.body.password2
-  if (password === password2) {
+  // const password2 = req.body.password2
+  if (password) {
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
-      username: req.body.username,
+      // username: req.body.username,
       password: req.body.password
     })
     User.createUser(newUser, function (err, user) {
       if (err) throw err
       // res.send(user).end()
-      res.status(201).send('user Created')
+      res.status(201).send({ msg: 'Account Created Successfully' })
     })
   } else {
     res.status(500).send("{errors: \"Passwords don't match\"}").end()
@@ -96,7 +107,8 @@ passport.deserializeUser(function (id, done) {
 app.post('/login',
   passport.authenticate('local'),
   (req, res) => {
-    res.status(200).send(req.user.name)
+    const user = req.user.name
+    res.status(200).send({ user })
   }
 )
 
@@ -107,14 +119,33 @@ app.get('/logout', (req, res) => {
   res.status(200).send('user logged Out')
 })
 
-const isLoggedIn = async (req, res, next) => {
-  if (req.session.passport !== undefined) {
-    return next()
-  }
-  res.status(401).send('loggin first')
-}
+// const isLoggedIn = async (req, res, next) => {
+//   if (req.session.passport !== undefined) {
+//     return next()
+//   }
+//   res.status(401).send('loggin first')
+// }
 
-app.use('/trips', isLoggedIn, tripRoutes)
+// app.use('/trips', isLoggedIn, tripRoutes)
+app.use('/trips', tripRoutes)
+
+// io.on('connection', client => {
+//   client.on('join', handleJoin)
+//   client.on('message', handleMessage)
+
+//   // client.on('chatrooms', handleGetChatrooms)
+
+//   client.on('availableUsers', handleGetAvailableUsers)
+
+//   client.on('disconnect', function () {
+//     console.log('client disconnect...', client.id)
+//     handleDisconnect()
+//   })
+//   client.on('error', function (err) {
+//     console.log('received error from client:', client.id)
+//     console.log(err)
+//   })
+// })
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)

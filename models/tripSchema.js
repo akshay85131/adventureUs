@@ -12,14 +12,20 @@ const tripSchema = new mongoose.Schema({
   endDate: { type: String,
     defalut: 'none',
     trim: true },
+
   days: { type: String,
     defalut: 'none',
     trim: true },
+
   itinearary: [],
+
+  members: [],
+
   createdAt: {
     type: Date,
     default: Date.now
   },
+
   admin: { type: String,
     defalut: 'none',
     trim: true }

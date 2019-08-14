@@ -41,11 +41,19 @@ const allTrip = async (req, res) => {
   console.log(req.headers.cookie, req.session)
   try {
     const allTripsData = await trips.find()
-    res.status(200).json(allTripsData)
+    const allTrips = allTripsData.map(obj => {
+      const trips = {}
+      trips['tripName'] = obj.tripName
+      trips['id'] = obj._id
+      trips['createdAt'] = obj.createdAt
+      return trips
+    })
+    res.status(200).json({ allTrips })
   } catch (error) {
     res.status(404).json(error)
   }
 }
+
 const updateTrip = async (req, res) => {
   try {
     const updatedTripData = await trips.findOneAndUpdate({ _id: req.body.id },
