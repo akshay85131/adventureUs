@@ -38,7 +38,7 @@ const tripsById = async (req, res) => {
   }
 }
 const allTrip = async (req, res) => {
-  console.log(req.headers.cookie, req.session)
+  // console.log(req.headers.cookie, req.session)
   try {
     const allTripsData = await trips.find()
     const allTrips = allTripsData.map(obj => {

@@ -17,7 +17,7 @@ require('dotenv').config()
 // const MongoStore = require('connect-mongo')(session)
 app.use(bodyParser.json())
 app.use(function (req, res, next) {
-  console.log(req)
+  // console.log(req)
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -129,24 +129,23 @@ app.get('/logout', (req, res) => {
 // app.use('/trips', isLoggedIn, tripRoutes)
 app.use('/trips', tripRoutes)
 
-// io.on('connection', client => {
-//   client.on('join', handleJoin)
-//   client.on('message', handleMessage)
+io.on('connection', (socket) => {
+  console.log('inside socket')
+  // console.log(socket)
+})
 
-//   // client.on('chatrooms', handleGetChatrooms)
+io.on('connection', function (socket) {
+  socket.on('trip', function (message) {
+    console.log('message : ' + message)
+  })
+})
 
-//   client.on('availableUsers', handleGetAvailableUsers)
-
-//   client.on('disconnect', function () {
-//     console.log('client disconnect...', client.id)
-//     handleDisconnect()
-//   })
-//   client.on('error', function (err) {
-//     console.log('received error from client:', client.id)
-//     console.log(err)
-//   })
-// })
-
+io.on('connection', (socket) => {
+  socket.on('trip', (message) => {
+    console.log('message : ', message)
+    io.emit('trip', message)
+  })
+})
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
 })
