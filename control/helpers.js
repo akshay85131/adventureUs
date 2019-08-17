@@ -5,6 +5,7 @@ const uuidv1 = require('uuid/v1')
 const userSession = require('../server')
 // moment().format()
 var difference
+
 const postNewTrip = async (req, res) => {
   try {
     var start = moment(req.body.startDate, 'DD-MM-YYYY')

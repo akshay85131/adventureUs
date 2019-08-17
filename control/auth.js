@@ -1,70 +1,49 @@
-// const passport = require('passport')
-// const localStrategy = require('passport-local').Strategy
-// const UserModel = require('../models/user')
+const User = require('../models/user')
+const LocalStrategy = require('passport-local').Strategy
+const passport = require('passport')
 
-// // Create a passport middleware to handle user registration
-// passport.use('signup', new localStrategy({
-//   usernameField: 'email',
-//   passwordField: 'password'
-//   // passReqToCallback: true
-// }, async (email, password, done) => {
-//   try {
-//     console.log(email, password)
-//     const user = await UserModel.create({ email, password })
-//     console.log(user)
-//     return done(null, user)
-//   } catch (error) {
-//     done(error)
-//   }
-// }))
+const register = async (req, res) => {
+  console.log('im inside')
+  const password = req.body.password
+  // const password2 = req.body.password2
+  if (password) {
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      // username: req.body.username,
+      password: req.body.password
+    })
+    const user = await User.createUser(newUser, function (err, user) {
+      if (err) throw err
+      console.log(err)
+      // res.send(user).end()
+      res.status(201).send({ msg: 'Account Created Successfully' })
+    })
+  } else {
+    res.status(500).send("{errors: \"Passwords don't match\"}").end()
+  }
+}
 
-// // Create a passport middleware to handle User login
-// passport.use('login', new localStrategy({
-//   usernameField: 'email',
-//   passwordField: 'password'
-// }, async (email, password, done) => {
-//   try {
-//     const user = await UserModel.findOne({ email })
-//     console.log(user)
-//     if (!user) {
-//       return done(null, false, { message: 'User not found' })
-//     }
-//     const validate = await user.isValidPassword(password, user.password)
-//     if (!validate) { return done(null, false, { message: 'Wrong Password' }) }
-//     return done(null, user, { message: 'Logged in Successfully' })
-//   } catch (error) {
-//     return done(error)
-//   }
-// }))
+passport.use(new LocalStrategy({
+  usernameField: 'email'
+},
+function (email, password, done) {
+  // console.log('email' + email)
+  User.getUserByEmail(email, function (err, user) {
+    if (err) throw err
+    if (!user) {
+      return done(null, false, { message: 'Unknown User' })
+    }
+    User.comparePassword(password, user.password, function (err, isMatch) {
+      if (err) throw err
+      if (isMatch) {
+        return done(null, user)
+      } else {
+        return done(null, false, { message: 'Invalid password' })
+      }
+    })
+  })
+}
+))
 
-// const JWTstrategy = require('passport-jwt').Strategy
-// const ExtractJWT = require('passport-jwt').ExtractJwt
-// passport.use(new JWTstrategy({
-//   secretOrKey: 'top_secret',
-//   jwtFromRequest: ExtractJWT.fromUrlQueryParameter('secret_token')
-// }, async (token, done) => {
-//   try {
-//     // Pass the user details to the next middleware
-//     return done(null, token.user)
-//   } catch (error) {
-//     done(error)
-//   }
-// }))
-
-// const passport = require('passport')
-// const LocalStrategy = require('passport-local').Strategy
-
-// passport.use(new LocalStrategy(
-//   function (username, password, done) {
-//     User.findOne({ username: username }, function (err, user) {
-//       if (err) { return done(err) }
-//       if (!user) {
-//         return done(null, false, { message: 'Incorrect username.' })
-//       }
-//       if (!user.validPassword(password)) {
-//         return done(null, false, { message: 'Incorrect password.' })
-//       }
-//       return done(null, user)
-//     })
-//   }
-// ))
+module.exports = { register }
