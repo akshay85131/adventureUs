@@ -18,7 +18,8 @@ const postNewTrip = async (req, res) => {
       itinearary: [],
       admin: ''
     }
-    const newIti = createItinearary(Math.abs(difference), Trip.startDate)
+    const startDate = moment(Trip.startDate, 'DD.MM.YYYY')
+    const newIti = createItinearary(Math.abs(difference), startDate)
     Trip.itinearary = newIti
     const adminName = await trips.findById(userSession)
     Trip.admin = adminName.name
@@ -82,7 +83,7 @@ const createItinearary = (difference, startDate) => {
     const Itinearay = {
       day: i,
       id: uuidv1(),
-      date: moment(startDate, 'DD-MM-YYYY').add('days, 1'),
+      date: startDate.add(12, 'days').format('DD/MM/YYYY'),
       location: '',
       activity: ''
     }
@@ -91,6 +92,14 @@ const createItinearary = (difference, startDate) => {
   return itineraryArray
 }
 
+const particularItinearayData = async (req, res) => {
+  try {
+    const itineraryData = await trips.findById(req.body.id)
+    res.status(200).json(itineraryData.itinearary)
+  } catch (error) {
+    res.status(404).json(error)
+  }
+}
 // const itineraryLocationUpdate = (id, data) => {
 //   trips.findById(id, (err, trips) => {
 //     if (err) return err
@@ -128,5 +137,5 @@ const createItinearary = (difference, startDate) => {
 //   }
 // }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData }
 // module.exports =  postNewTrip

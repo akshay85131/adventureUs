@@ -83,9 +83,9 @@ const isLoggedIn = async (req, res, next) => {
   res.status(401).send('loggin first')
 }
 
-app.use('/trips', isLoggedIn, tripRoutes)
+// app.use('/trips', isLoggedIn, tripRoutes)
 app.use('/', tripRoutes)
-// app.use('/trips', tripRoutes)
+app.use('/trips', tripRoutes)
 
 
 server.listen(PORT, () => {

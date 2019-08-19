@@ -5,12 +5,10 @@ const passport = require('passport')
 const register = async (req, res) => {
   console.log('im inside')
   const password = req.body.password
-  // const password2 = req.body.password2
   if (password) {
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
-      // username: req.body.username,
       password: req.body.password
     })
     const user = await User.createUser(newUser, function (err, user) {
@@ -27,19 +25,19 @@ const register = async (req, res) => {
 passport.use(new LocalStrategy({
   usernameField: 'email'
 },
-function (email, password, done) {
+async (email, password, done) => {
   // console.log('email' + email)
-  User.getUserByEmail(email, function (err, user) {
+  User.getUserByEmail(email, (err, user) => {
     if (err) throw err
     if (!user) {
       return done(null, false, { message: 'Unknown User' })
     }
-    User.comparePassword(password, user.password, function (err, isMatch) {
+    User.comparePassword(password, user.password, (err, isMatch) => {
       if (err) throw err
       if (isMatch) {
         return done(null, user)
       } else {
-        return done(null, false, { message: 'Invalid password' })
+        return done(null, false, { status: 401, message: 'Invalid password' })
       }
     })
   })
