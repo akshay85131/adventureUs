@@ -28,8 +28,8 @@ app.use(staticify.middleware)
 // mongoose.connect(process.env.DB_HOST)
 
 app.use(session({
-  store: new MongoStore({
-    // mongooseConnection: mongoose.connection,
+  // store: new MongoStore({
+  // mongooseConnection: mongoose.connection,
   //   mongooseConnection: mongoose.connection,
   //   autoRemove: 'interval',
   //   autoRemoveInterval: 10
