@@ -94,7 +94,7 @@ const createItinearary = (difference, startDate) => {
 
 const particularItinearayData = async (req, res) => {
   try {
-    const itineraryData = await trips.findById(req.body.id)
+    const itineraryData = await trips.findById(req.params.id)
     res.status(200).json(itineraryData.itinearary)
   } catch (error) {
     res.status(404).json(error)

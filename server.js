@@ -6,14 +6,15 @@ const io = require('socket.io')(server)
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
-// const LocalStrategy = require('passport-local').Strategy
 const User = require('./models/user')
 const tripRoutes = require('./routes/route')
 require('dotenv').config()
-// var cors = require('cors')
 const PORT = process.env.PORT || 3000
 const connection = require('./models/config')
 const MongoStore = require('connect-mongo')(session)
+const path = require('path')
+const mongoose = require('mongoose')
+const staticify = require('staticify')(path.join(__dirname, 'views'))
 app.use(bodyParser.json())
 app.use(function (req, res, next) {
   // console.log(req)
@@ -22,10 +23,8 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   next()
 })
-
-app.use(express.static('views'))
 app.use(bodyParser.urlencoded({ extended: true }))
-const mongoose = require('mongoose')
+app.use(staticify.middleware)
 mongoose.connect(process.env.DB_HOST)
 
 app.use(session({
@@ -41,15 +40,17 @@ app.use(session({
   saveUninitialized: true,
   cookie: { maxAge: 60000 }
 }))
+
 app.use(cookieParser())
 app.use(passport.initialize())
 app.use(passport.session())
 
-// app.use(function printSession (req, res, next) {
-//   // console.log('req.session', req.session)
-//   return next()
-// })
-
+app.use(function (req, res, next) {
+  req.url = req.url.replace(/\/([^\/]+)\.[0-9a-f]+\.(css|js|jpg|png|gif|svg)$/, '/$1.$2')
+  next()
+})
+app.use(express.static('views'))
+app.use('/*', express.static(path.join(__dirname, 'views'), { maxAge: '30 days' }))
 passport.serializeUser(function (user, done) {
   done(null, user.id)
 })
@@ -83,10 +84,9 @@ const isLoggedIn = async (req, res, next) => {
   res.status(401).send('loggin first')
 }
 
-// app.use('/trips', isLoggedIn, tripRoutes)
+app.use('/trips', isLoggedIn, tripRoutes)
 app.use('/', tripRoutes)
-app.use('/trips', tripRoutes)
-
+// app.use('/trips', tripRoutes)
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)
