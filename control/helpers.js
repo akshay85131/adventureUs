@@ -1,9 +1,7 @@
 const { trips } = require('../models/config')
-var moment = require('moment')
+const moment = require('moment')
 const uuidv1 = require('uuid/v1')
-// const session = require('express-session')
 const userSession = require('../server')
-// moment().format()
 var difference
 
 const postNewTrip = async (req, res) => {
@@ -18,7 +16,7 @@ const postNewTrip = async (req, res) => {
       itinearary: [],
       admin: ''
     }
-    const startDate = moment(Trip.startDate, 'DD.MM.YYYY')
+    const startDate = moment(Trip.startDate, 'DD-MM-YYYY')
     const newIti = createItinearary(Math.abs(difference), startDate)
     Trip.itinearary = newIti
     const adminName = await trips.findById(userSession)
@@ -29,7 +27,6 @@ const postNewTrip = async (req, res) => {
     res.status(400).json(error)
   }
 }
-// const user = userSession.findOne({  })
 
 const tripsById = async (req, res) => {
   try {
@@ -40,7 +37,6 @@ const tripsById = async (req, res) => {
   }
 }
 const allTrip = async (req, res) => {
-  // console.log(req.headers.cookie, req.session)
   try {
     const allTripsData = await trips.find()
     const allTrips = allTripsData.map(obj => {
@@ -60,7 +56,6 @@ const updateTrip = async (req, res) => {
   try {
     const updatedTripData = await trips.findOneAndUpdate({ _id: req.body.id },
       { tripName: req.body.tripName }, { new: true })
-    // console.log(req.body)
     res.status(200).json(updatedTripData)
   } catch (error) {
     res.status(404).json(error)
@@ -76,14 +71,12 @@ const deleteTrip = async (req, res) => {
 }
 
 const createItinearary = (difference, startDate) => {
-  // console.log(difference, startDate)
-  // console.log('Im in kehooooooooooo')
   const itineraryArray = []
   for (let i = 1; i <= difference; i++) {
     const Itinearay = {
       day: i,
       id: uuidv1(),
-      date: startDate.add(12, 'days').format('DD/MM/YYYY'),
+      date: startDate.add(1, 'days').format('DD-MMMMM-YYYY'),
       location: '',
       activity: ''
     }
