@@ -25,15 +25,15 @@ app.use(function (req, res, next) {
 })
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(staticify.middleware)
-mongoose.connect(process.env.DB_HOST)
+// mongoose.connect(process.env.DB_HOST)
 
 app.use(session({
   store: new MongoStore({
     // mongooseConnection: mongoose.connection,
-    mongooseConnection: mongoose.connection,
-    autoRemove: 'interval',
-    autoRemoveInterval: 10
-  }),
+  //   mongooseConnection: mongoose.connection,
+  //   autoRemove: 'interval',
+  //   autoRemoveInterval: 10
+  // }),
   key: 'user_sid',
   secret: 'Akshay13578111851171',
   resave: true,
