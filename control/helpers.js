@@ -1,4 +1,5 @@
 const { trips } = require('../models/config')
+const { todo } = require('../models/config')
 const moment = require('moment')
 const uuidv1 = require('uuid/v1')
 const userSession = require('../server')
@@ -130,5 +131,48 @@ const particularItinearayData = async (req, res) => {
 //   }
 // }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData }
-// module.exports =  postNewTrip
+// Todo logic
+const createTodo = async (req, res) => {
+  try {
+    const user = await trips.findById(req.body.userId)
+    const Todo = {
+      text: req.body.text,
+      completed: req.body.completed,
+      note: req.body.note
+    }
+    const newTodo = await todo.create(Todo)
+    const resData = {
+      _id: newTodo.id,
+      createdAt: newTodo.createdAt
+    }
+    user['todo'] = newTodo
+
+    res.status(201).send(resData)
+  } catch (error) {
+    res.status(404).json(error)
+  }
+}
+
+const updateTodoTask = async (req, res) => {
+  try {
+    const userId = req.body.userId
+    const user = await trips.findById(userId)
+    const updatedTodo = await user.todo.findOneAndUpdate({ id: req.body.taskId },
+      { tripName: req.body.text }, { new: true })
+    res.status(200).json({ msg: 'Data Updated' })
+  } catch (error) {
+    res.status(404).json(error)
+  }
+}
+
+const deleteTask = async (req, res) => {
+  try {
+    const user = await trips.findById(req.body.userId)
+    const deleteTodo = await user.todo.findOneAndDelete({ id: req.body.taskId })
+    res.status(200).json(`task Deleted ${deleteTodo.tripName}`)
+  } catch (error) {
+    res.status(404).json(error)
+  }
+}
+
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask }
