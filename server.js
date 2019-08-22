@@ -66,7 +66,8 @@ app.post('/login',
   passport.authenticate('local'),
   (req, res) => {
     const user = req.user.name
-    res.status(200).send({ user })
+    const id = req.user.id
+    res.status(200).send({ user, id })
   }
 )
 
