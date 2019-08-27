@@ -79,16 +79,16 @@ app.get('/logout', (req, res) => {
   res.status(200).send('user logged Out')
 })
 
-const isLoggedIn = async (req, res, next) => {
-  if (req.session.passport !== undefined) {
-    return next()
-  }
-  res.status(401).send('loggin first')
-}
+// const isLoggedIn = async (req, res, next) => {
+//   if (req.session.passport !== undefined) {
+//     return next()
+//   }
+//   res.status(401).send('loggin first')
+// }
 
-app.use('/trips', isLoggedIn, tripRoutes)
+// app.use('/trips', isLoggedIn, tripRoutes)
 app.use('/', tripRoutes)
-// app.use('/trips', tripRoutes)
+app.use('/trips', tripRoutes)
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)

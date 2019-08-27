@@ -1,5 +1,5 @@
 const { trips } = require('../models/config')
-const { todo } = require('../models/config')
+const todo = require('../models/todoSchema')
 const moment = require('moment')
 const uuidv1 = require('uuid/v1')
 const userSession = require('../server')
@@ -10,6 +10,7 @@ const postNewTrip = async (req, res) => {
     var start = moment(req.body.startDate, 'DD-MM-YYYY')
     var end = moment(req.body.endDate, 'DD-MM-YYYY')
     difference = (moment.duration(start.diff(end)).asDays())
+
     const Trip = {
       tripName: req.body.tripName,
       startDate: req.body.startDate,
@@ -133,22 +134,21 @@ const particularItinearayData = async (req, res) => {
 
 // Todo logic
 const createTodo = async (req, res) => {
+  // console.log('im inside')
   try {
-    const user = await trips.findById(req.body.userId)
+    // const user = await trips.findById(req.body.userId)
     const Todo = {
       text: req.body.text,
-      completed: req.body.completed,
-      note: req.body.note
+      id: uuidv1()
     }
+    console.log('++++++++' + Todo.id)
     const newTodo = await todo.create(Todo)
-    const resData = {
-      _id: newTodo.id,
-      createdAt: newTodo.createdAt
-    }
-    user['todo'] = newTodo
-
-    res.status(201).send(resData)
+    // console.log(newTodo)
+    const todoData = { _id: newTodo.id, createdAt: newTodo.createdAt }
+    res.status(201).send(todoData)
+    // { task: [{ newTodo }] }
   } catch (error) {
+    console.log(error)
     res.status(404).json(error)
   }
 }
@@ -156,7 +156,7 @@ const createTodo = async (req, res) => {
 const updateTodoTask = async (req, res) => {
   try {
     const userId = req.body.userId
-    const user = await trips.findById(userId)
+    const user = await todo.findById(userId)
     const updatedTodo = await user.todo.findOneAndUpdate({ id: req.body.taskId },
       { text: req.body.text }, { new: true })
     res.status(200).json({ msg: 'Data Updated' })
