@@ -1,22 +1,27 @@
 const mongoose = require('mongoose')
 const todoSchema = new mongoose.Schema({
-  userId: {
-    type: String
+  tasks: [
+    {
+      id: { type: String },
+      text: { type: String },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
+  columns: {
+    todo: {
+      taskIds: [{ type: String }]
+    }
   },
-  text: {
-    type: String
+  inprogress: {
+    taskIds: [{ type: String }]
   },
-  completed: {
-    type: Boolean,
-    default: false
+  done: {
+    taskIds: [{ type: String }]
   },
-  note: {
-    type: String
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  columnOrder: [{ type: String }]
 })
 const todo = mongoose.model('todo', todoSchema)
 module.exports = todo

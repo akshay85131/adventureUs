@@ -158,7 +158,7 @@ const updateTodoTask = async (req, res) => {
     const userId = req.body.userId
     const user = await trips.findById(userId)
     const updatedTodo = await user.todo.findOneAndUpdate({ id: req.body.taskId },
-      { tripName: req.body.text }, { new: true })
+      { text: req.body.text }, { new: true })
     res.status(200).json({ msg: 'Data Updated' })
   } catch (error) {
     res.status(404).json(error)
