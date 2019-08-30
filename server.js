@@ -66,9 +66,9 @@ passport.deserializeUser(function (id, done) {
 app.post('/login',
   passport.authenticate('local'),
   (req, res) => {
-    const user = req.user.name
+    const userName = req.user.name
     const id = req.user.id
-    res.status(200).send({ user, id })
+    res.status(200).send({ userName, id })
   }
 )
 
@@ -79,16 +79,16 @@ app.get('/logout', (req, res) => {
   res.status(200).send('user logged Out')
 })
 
-// const isLoggedIn = async (req, res, next) => {
-//   if (req.session.passport !== undefined) {
-//     return next()
-//   }
-//   res.status(401).send('loggin first')
-// }
+const isLoggedIn = async (req, res, next) => {
+  if (req.session.passport !== undefined) {
+    return next()
+  }
+  res.status(401).send('loggin first')
+}
 
-// app.use('/trips', isLoggedIn, tripRoutes)
+app.use('/trip', isLoggedIn, tripRoutes)
 app.use('/', tripRoutes)
-app.use('/trips', tripRoutes)
+// app.use('/trips', tripRoutes)
 
 server.listen(PORT, () => {
   console.log(`Magic Happening on ${PORT}`)

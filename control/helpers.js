@@ -186,7 +186,6 @@ const columnOrderData = async (req, res) => {
     const todoOrder = await order.find()
     const removedIndex = await todoOrder[0].fromColumn.taskIds.splice(fromIndex, 1)
     const newOrder = await todoOrder[0].toColumn.taskIds.splice(toIndex, 0, removedIndex)
-
   } catch (error) {
   }
 }
@@ -212,5 +211,11 @@ const deleteTask = async (req, res) => {
     res.status(404).json(error)
   }
 }
+const countTrips = (req, res) => {
+  console.log('im fine')
+  const user = req.headers.cookie.user
+  console.log(user)
+  res.status(200).json({ tripCount: 2 })
+}
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData, countTrips }
