@@ -30,7 +30,17 @@ const postNewTrip = async (req, res) => {
     res.status(400).json(error)
   }
 }
-
+const countTrip = (req, res) => {
+  try {
+    console.log('im fine')
+    const user = req.headers.cookie.user
+    console.log(user)
+    res.status(200).json({ tripCount: 2 })
+  } catch (error) {
+    console.log(error)
+    res.status(404).json(error)
+  }
+}
 const tripsById = async (req, res) => {
   try {
     const tripData = await trips.findById(req.params.id)
@@ -211,11 +221,5 @@ const deleteTask = async (req, res) => {
     res.status(404).json(error)
   }
 }
-const countTrips = (req, res) => {
-  console.log('im fine')
-  const user = req.headers.cookie.user
-  console.log(user)
-  res.status(200).json({ tripCount: 2 })
-}
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData, countTrips }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData, countTrip }
