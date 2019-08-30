@@ -1,5 +1,6 @@
 const { trips } = require('../models/config')
-const todo = require('../models/todoSchema')
+const todos = require('../models/todoSchema')
+const order = require('../models/orderSchema')
 const moment = require('moment')
 const uuidv1 = require('uuid/v1')
 const userSession = require('../server')
@@ -141,15 +142,52 @@ const createTodo = async (req, res) => {
       text: req.body.text,
       id: uuidv1()
     }
-    console.log('++++++++' + Todo.id)
-    const newTodo = await todo.create(Todo)
-    // console.log(newTodo)
+    const newTodo = await todos.create(Todo)
+    console.log(newTodo)
     const todoData = { _id: newTodo.id, createdAt: newTodo.createdAt }
+    let column = await order.find()
+    if (column === undefined) { column = createOrder() }
+    // console.log('------' + column.todo)
+    // console.log(column[0].todo)
+    column[0].todo.taskIds.push(newTodo.id)
+    console.log(column[0])
     res.status(201).send(todoData)
-    // { task: [{ newTodo }] }
   } catch (error) {
     console.log(error)
     res.status(404).json(error)
+  }
+}
+function createOrder () {
+  // console.log('im inside')
+  const columnsOrder = {
+    todo: {
+      taskIds: []
+    },
+    inprogress: {
+      taskIds: []
+    },
+    done: {
+      taskIds: []
+    },
+    columnOrder: []
+  }
+  const data = order.create(columnsOrder)
+  return data
+}
+
+const columnOrderData = async (req, res) => {
+  try {
+    const tripId = req.body.tripId
+    const fromColumn = req.body.sourceColumnId
+    const toColumn = req.body.destinationColumnId
+    const fromIndex = req.body.sourceIndex
+    const toIndex = req.body.destinationIndex
+
+    const todoOrder = await order.find()
+    const removedIndex = await todoOrder[0].fromColumn.taskIds.splice(fromIndex, 1)
+    const newOrder = await todoOrder[0].toColumn.taskIds.splice(toIndex, 0, removedIndex)
+
+  } catch (error) {
   }
 }
 
@@ -175,4 +213,4 @@ const deleteTask = async (req, res) => {
   }
 }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData }

@@ -1,11 +1,19 @@
 const mongoose = require('mongoose')
-const todoSchema = new mongoose.Schema({
+const Schema = mongoose.Schema
+const todoSchema = new Schema({
   id: { type: String },
   text: { type: String },
-  inprogress: { type: Boolean, default: false },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  user: {
+    type: Schema.ObjectId,
+    ref: 'user'
+  },
+  trip: {
+    type: Schema.ObjectId,
+    ref: 'tripSchema'
   }
 
 })
