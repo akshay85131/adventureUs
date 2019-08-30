@@ -158,7 +158,7 @@ const createTodo = async (req, res) => {
   }
 }
 function createOrder () {
-  console.log('im inside')
+  // console.log('im inside')
   const columnsOrder = {
     todo: {
       taskIds: []
@@ -170,7 +170,6 @@ function createOrder () {
       taskIds: []
     },
     columnOrder: []
-
   }
   const data = order.create(columnsOrder)
   return data
@@ -185,8 +184,8 @@ const columnOrderData = async (req, res) => {
     const toIndex = req.body.destinationIndex
 
     const todoOrder = await order.find()
-    const removedIndex = await todoOrder[0].fromColumn.splice(fromIndex, 1)
-    const newOrder = await todoOrder[0].toColumn.splice(toIndex, 0, removedIndex)
+    const removedIndex = await todoOrder[0].fromColumn.taskIds.splice(fromIndex, 1)
+    const newOrder = await todoOrder[0].toColumn.taskIds.splice(toIndex, 0, removedIndex)
 
   } catch (error) {
   }
