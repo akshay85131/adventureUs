@@ -6,6 +6,7 @@ const tripSchema = new mongoose.Schema({
     defalut: 'none',
     trim: true
   },
+  _id: { type: String },
 
   startDate: {
     type: String,

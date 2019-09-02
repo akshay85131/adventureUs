@@ -17,6 +17,6 @@ router.post('/todo/create', createTodo)
 router.put('/todo/update', updateTodoTask)
 router.delete('/todo/deleteTask', deleteTask)
 router.post('/todo/dnd', columnOrderData)
-router.get('/trip/count', countTrip)
+// router.get('/count', countTrip)
 
 module.exports = router

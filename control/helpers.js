@@ -27,14 +27,15 @@ const postNewTrip = async (req, res) => {
     const newTripData = await trips.create(Trip)
     res.status(200).json(`data added successfully${newTripData}`) // i hav to semd id
   } catch (error) {
+    console.log(error)
     res.status(400).json(error)
   }
 }
-const countTrip = (req, res) => {
+const countTrip = async (req, res) => {
   try {
-    console.log('im fine')
-    const user = req.headers.cookie.user
-    console.log(user)
+    console.log(req)
+    // const user = await req.headers.cookie.user
+    // console.log(user)
     res.status(200).json({ tripCount: 2 })
   } catch (error) {
     console.log(error)
@@ -145,9 +146,7 @@ const particularItinearayData = async (req, res) => {
 
 // Todo logic
 const createTodo = async (req, res) => {
-  // console.log('im inside')
   try {
-    // const user = await trips.findById(req.body.userId)
     const Todo = {
       text: req.body.text,
       id: uuidv1()
@@ -157,18 +156,17 @@ const createTodo = async (req, res) => {
     const todoData = { _id: newTodo.id, createdAt: newTodo.createdAt }
     let column = await order.find()
     if (column === undefined) { column = createOrder() }
-    // console.log('------' + column.todo)
-    // console.log(column[0].todo)
+
     column[0].todo.taskIds.push(newTodo.id)
     console.log(column[0])
     res.status(201).send(todoData)
   } catch (error) {
     console.log(error)
-    res.status(404).json(error)
+    res.status(400).json(error)
   }
 }
+
 function createOrder () {
-  // console.log('im inside')
   const columnsOrder = {
     todo: {
       taskIds: []
@@ -197,6 +195,7 @@ const columnOrderData = async (req, res) => {
     const removedIndex = await todoOrder[0].fromColumn.taskIds.splice(fromIndex, 1)
     const newOrder = await todoOrder[0].toColumn.taskIds.splice(toIndex, 0, removedIndex)
   } catch (error) {
+    res.status(404).json(error)
   }
 }
 
