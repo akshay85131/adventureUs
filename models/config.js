@@ -4,8 +4,8 @@ const trips = require('./tripSchema')
 mongoose.set('debug', true)
 mongoose.Promise = require('bluebird')
 var db
-const connection = mongoose.connect(process.env.DB_HOST, { useNewUrlParser: true }, (err, dataBase) => {
-// const connection = mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, (err) => {
+// const connection = mongoose.connect(process.env.DB_HOST, { useNewUrlParser: true }, (err, dataBase) => {
+const connection = mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, (err) => {
   db = dataBase
   if (!err) {
     console.log('connection successfull')
