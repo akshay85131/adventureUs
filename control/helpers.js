@@ -1,50 +1,36 @@
 const { trips } = require('../models/config')
 const todos = require('../models/todoSchema')
 const order = require('../models/orderSchema')
+const itinerarys = require('../models/itineararySchema')
+const User = require('../models/user')
 const moment = require('moment')
 const uuidv1 = require('uuid/v1')
-const userSession = require('../server')
-var difference
-
 const postNewTrip = async (req, res) => {
   try {
-    var start = moment(req.body.startDate, 'DD-MM-YYYY')
-    var end = moment(req.body.endDate, 'DD-MM-YYYY')
-    difference = (moment.duration(start.diff(end)).asDays())
-
     const Trip = {
       tripName: req.body.tripName,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      itinearary: [],
-      admin: ''
+      // admin: req.cookies.userId,
+      member: []
     }
-    const startDate = moment(Trip.startDate, 'DD-MM-YYYY')
-    const newIti = createItinearary(Math.abs(difference), startDate)
-    Trip.itinearary = newIti
-    const adminName = await trips.findById(userSession)
-    Trip.admin = adminName.name
     const newTripData = await trips.create(Trip)
-    res.status(200).json(`data added successfully${newTripData}`) // i hav to semd id
+    res.status(201).json(`data added successfully${newTripData}`)
   } catch (error) {
-    console.log(error)
-    res.status(400).json(error)
+    res.status(400).json(Object.create(error))
   }
 }
 const countTrip = async (req, res) => {
   try {
-    console.log(req)
-    // const user = await req.headers.cookie.user
-    // console.log(user)
     res.status(200).json({ tripCount: 2 })
   } catch (error) {
-    console.log(error)
     res.status(404).json(error)
   }
 }
 const tripsById = async (req, res) => {
   try {
-    const tripData = await trips.findById(req.params.id)
+    const _id = req.params.id
+    const tripData = await trips.findById(_id)
     res.status(200).json(tripData)
   } catch (error) {
     res.status(404).json(error)
@@ -52,15 +38,16 @@ const tripsById = async (req, res) => {
 }
 const allTrip = async (req, res) => {
   try {
+    // console.log(req.session.userId)
     const allTripsData = await trips.find()
-    const allTrips = allTripsData.map(obj => {
+    const allTripData = allTripsData.map(obj => {
       const trips = {}
       trips['tripName'] = obj.tripName
-      trips['id'] = obj._id
+      trips['_id'] = obj._id
       trips['createdAt'] = obj.createdAt
       return trips
     })
-    res.status(200).json({ allTrips })
+    res.status(200).json({ allTripData })
   } catch (error) {
     res.status(404).json(error)
   }
@@ -84,89 +71,157 @@ const deleteTrip = async (req, res) => {
   }
 }
 
-const createItinearary = (difference, startDate) => {
-  const itineraryArray = []
-  for (let i = 1; i <= difference; i++) {
-    const Itinearay = {
-      day: i,
-      id: uuidv1(),
-      date: startDate.add(1, 'days').format('DD-MMMMM-YYYY'),
-      location: '',
-      activity: ''
+const particularItinearayData = async (req, res) => {
+  try {
+    // const _id = req.params.id
+    // const currentUser = req.cookies.userId
+    // const trip = await trips.find(_id)
+    // console.log(trips.admin)
+    // console.log(currentUser === trip.admin)
+    const id = req.params.id
+    const itinerary1 = await itinerarys.find({ tripId: id })
+    if (itinerary1.length === 0) {
+      const _id = req.params.id
+      const particularTrip = await trips.findById(_id)
+      const start = moment(particularTrip.startDate)
+      const end = moment(particularTrip.endDate)
+      const difference = start.diff(end, 'days')
+      const itidata = await itineraryLoop(start, Math.abs(difference), particularTrip._id)
+      const itineraryData = await itinerarys.create(itidata)
+      const itinerary = await itineraryData.map(item => {
+        const itinerary = {}
+        itinerary['day'] = item.day
+        itinerary['_id'] = item._id
+        itinerary['date'] = item.date
+        itinerary['location'] = item.location
+        itinerary['activity'] = item.activity
+        return itinerary
+      })
+      res.status(200).json({ itinerary, isAdmin: true })
+    } else {
+      const result = await itinerarys.find({ tripId: id })
+      const itinerary = await result.map(item => {
+        const itinerary = {}
+        itinerary['day'] = item.day
+        itinerary['_id'] = item._id
+        itinerary['date'] = item.date
+        itinerary['location'] = item.location
+        itinerary['activity'] = item.activity
+        return itinerary
+      })
+      res.status(200).json({ itinerary, isAdmin: true })
     }
-    itineraryArray.push(Itinearay)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+const itineraryLoop = (start, difference, id) => {
+  const itineraryArray = []
+  for (let i = 1; i <= (difference + 1); i++) {
+    const Itinerary = {
+      day: i,
+      _id: uuidv1(),
+      date: start.add(1, 'days').format('DD-MM-YYYY'),
+      location: ' ',
+      activity: [],
+      tripId: id
+    }
+    itineraryArray.push(Itinerary)
   }
   return itineraryArray
 }
 
-const particularItinearayData = async (req, res) => {
+const itineraryData = async (req, res) => {
   try {
-    const itineraryData = await trips.findById(req.params.id)
-    res.status(200).json(itineraryData.itinearary)
+    const dayId = req.body._id
+    const itinerarayLocation = req.body.location
+    const itinerarayActivity = req.body.activity
+    const id = req.params.id
+    const itinerary = await itinerarys.find({ tripId: id })
+    for (const x of itinerary) {
+      if (x.id === dayId) {
+        const result = await itinerarys.findOneAndUpdate({ _id: x.id }, { activity: itinerarayActivity, location: itinerarayLocation })
+      }
+    }
+    res.status(200).json({ msg: 'data updated' })
   } catch (error) {
+    console.log(error)
     res.status(404).json(error)
   }
 }
-// const itineraryLocationUpdate = (id, data) => {
-//   trips.findById(id, (err, trips) => {
-//     if (err) return err
-//     console.log(trips)
-//   })
-// }
 
-// const itineraryLocationUpdate = async (req, res) => {
-//   try {
-//     const updatedLocationData = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
-//       { location: req.body.location }, { new: true })
-//     // console.log(req.body)
-//     res.status(200).json(updatedLocationData)
-//   } catch (error) {
-//     res.status(404).json(error)
-//   }
-// }
-
-// const itineraryActivityUpdate = async (req, res) => {
-//   try {
-//     const neraryActivityUpdate = await trips.itinearary.findOneAndUpdate({ _id: req.body.id },
-//       { activity: req.body.activity }, { new: true })
-//     // console.log(req.body)
-//     res.status(200).json(neraryActivityUpdate)
-//   } catch (error) {
-//     res.status(404).json(error)
-//   }
-// }
-// const itineraryActivityDelete = async (req, res) => {
-//   try {
-//     const activityDel = await trips.itinearary.findOneAndDelete({ _id: req.params.id })
-//     res.status(200).json(`item deleted ${activityDel}`)
-//   } catch (error) {
-//     res.status(404).json(error)
-//   }
-// }
+const getUser = async (req, res) => {
+  // console.log('+' + req.cookies.userId)
+  // console.log('im in')
+  if (req.cookies.userId !== undefined) {
+    const currentUser = await User.findById(req.cookies.userId)
+    if (currentUser.length !== 0) {
+      return res.status(200).json({ userName: currentUser.name })
+    }
+  }
+  res.status(401).json({ msg: 'user not found' })
+}
 
 // Todo logic
+const getAllTodos = async (req, res) => {
+  try {
+    const tripId = req.params.id
+    // const userId = req.cookies.userId
+    const todo = await todos.find()
+    let column = await order.find()
+    if (column.length === 0) { column = await createOrder() }
+    const columnOrders = await column.map(item => {
+      const order = {}
+      order['todo'] = item.todo
+      order['inprogress'] = item.inprogress
+      order['done'] = item.done
+      return order
+    })
+    const columnOrderArray = await column.map(item => item.columnOrder)
+
+    const todoFormat = await todo.map(item => {
+      const todos = {}
+      todos['_id'] = item._id
+      todos['text'] = item.text
+      todos['createdAt'] = item.createdAt
+      return todos
+    })
+    res.status(200).json({ tasks: todoFormat, columns: { ...columnOrders[0] }, columnOrder: columnOrderArray[0] })
+  } catch (error) {
+    console.log(error)
+    res.status(404).json(error)
+  }
+}
+
 const createTodo = async (req, res) => {
   try {
+    const tripId = req.params.id
     const Todo = {
       text: req.body.text,
-      id: uuidv1()
+      id: uuidv1(),
+      user: tripId
     }
     const newTodo = await todos.create(Todo)
-    console.log(newTodo)
-    const todoData = { _id: newTodo.id, createdAt: newTodo.createdAt }
-    let column = await order.find()
-    if (column === undefined) { column = createOrder() }
+    const todoData = { _id: newTodo._id, createdAt: newTodo.createdAt }
 
-    column[0].todo.taskIds.push(newTodo.id)
-    console.log(column[0])
-    res.status(201).send(todoData)
+    const column = await order.find()
+    // const column = await order.find()
+    const newTask = column[0].todo.taskIds
+    newTask.push(newTodo.id)
+    const result = await order.findOneAndUpdate({ todo: { taskIds: newTask } })
+    // const result = await order.findOneAndUpdate({ _id: userId }, { todo: { taskIds: newTask } })
+
+    // console.log('+' + result)
+    // console.log(column[0].todo.taskIds)
+    // order.update({ _id: userId }, { todo: { taskIds: newTask } })
+    res.status(201).send({ ...todoData })
   } catch (error) {
     console.log(error)
     res.status(400).json(error)
   }
 }
 
-function createOrder () {
+async function createOrder () {
   const columnsOrder = {
     todo: {
       taskIds: []
@@ -177,23 +232,29 @@ function createOrder () {
     done: {
       taskIds: []
     },
-    columnOrder: []
+    columnOrder: ['todo', 'inprogress', 'done']
+    // user: tripId
   }
-  const data = order.create(columnsOrder)
+  const data = await order.create(columnsOrder)
   return data
 }
 
 const columnOrderData = async (req, res) => {
   try {
-    const tripId = req.body.tripId
+    const tripId = req.params.id
+    console.log(req.body)
     const fromColumn = req.body.sourceColumnId
     const toColumn = req.body.destinationColumnId
     const fromIndex = req.body.sourceIndex
     const toIndex = req.body.destinationIndex
-
     const todoOrder = await order.find()
-    const removedIndex = await todoOrder[0].fromColumn.taskIds.splice(fromIndex, 1)
-    const newOrder = await todoOrder[0].toColumn.taskIds.splice(toIndex, 0, removedIndex)
+    const fromArray = todoOrder[0][`${fromColumn}`].taskIds
+    const fromId = fromArray.splice(fromIndex, 1)
+    const result = await order.findOneAndUpdate({ [`${fromColumn}`]: { taskIds: fromArray } })
+    const toId = todoOrder[0][`${toColumn}`].taskIds
+    toId.splice(toIndex, 0, fromId)
+    const newOrderData = await order.findOneAndUpdate({ [`${toColumn}`]: { taskIds: toId } })
+    res.status(200).end()
   } catch (error) {
     res.status(404).json(error)
   }
@@ -201,24 +262,30 @@ const columnOrderData = async (req, res) => {
 
 const updateTodoTask = async (req, res) => {
   try {
-    const userId = req.body.userId
-    const user = await todo.findById(userId)
-    const updatedTodo = await user.todo.findOneAndUpdate({ id: req.body.taskId },
-      { text: req.body.text }, { new: true })
+    // const todo = await todos.find()
+    // console.log(todo)
+    const updatedTodo = await todos.findOneAndUpdate({ _id: req.body.taskId }, { text: req.body.text })
+    console.log(updatedTodo)
     res.status(200).json({ msg: 'Data Updated' })
   } catch (error) {
+    console.log(error)
     res.status(404).json(error)
   }
 }
 
 const deleteTask = async (req, res) => {
   try {
-    const user = await trips.findById(req.body.userId)
-    const deleteTodo = await user.todo.findOneAndDelete({ id: req.body.taskId })
-    res.status(200).json(`task Deleted ${deleteTodo.tripName}`)
+    const column = req.body.columnId
+    const orders = await order.find()
+    const deleteItem = orders[0][`${column}`].taskIds
+    const index = deleteItem.indexOf(req.body.taskId)
+    const updatedArray = deleteItem.splice(index, 1)
+    const deleteTodo = await order.findOneAndUpdate({ [`${column}`]: { taskIds: deleteItem } })
+    res.status(200).json(`task Deleted ${deleteTodo}`)
   } catch (error) {
+    console.log(error)
     res.status(404).json(error)
   }
 }
 
-module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData, countTrip }
+module.exports = { postNewTrip, allTrip, tripsById, updateTrip, deleteTrip, particularItinearayData, createTodo, updateTodoTask, deleteTask, columnOrderData, countTrip, getUser, itineraryData, getAllTodos }

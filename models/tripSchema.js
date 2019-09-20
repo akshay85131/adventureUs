@@ -6,14 +6,12 @@ const tripSchema = new mongoose.Schema({
     defalut: 'none',
     trim: true
   },
-  _id: { type: String },
 
   startDate: {
     type: String,
     defalut: 'none',
     trim: true
   },
-
   endDate: {
     type: String,
     defalut: 'none',
@@ -26,8 +24,6 @@ const tripSchema = new mongoose.Schema({
     trim: true
   },
 
-  itinearary: [],
-
   members: [],
 
   createdAt: {
@@ -39,6 +35,10 @@ const tripSchema = new mongoose.Schema({
     type: String,
     defalut: 'none',
     trim: true
+  },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'user'
   }
 })
 const trips = mongoose.model('trips', tripSchema)

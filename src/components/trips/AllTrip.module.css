@@ -1,0 +1,19 @@
+.block {
+    margin-bottom: 5rem;
+    height: 2rem;
+}
+
+.link {
+    color: black;
+    text-decoration: none;
+    display: block;
+    height: 100%;
+    padding: 1rem;
+
+}
+
+.inner_container {
+    max-width: 96rem;
+    margin: 0 auto;
+}
+

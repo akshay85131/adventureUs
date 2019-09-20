@@ -1,0 +1,45 @@
+.option_link {
+  text-decoration: none;
+  color: white;
+  display: block;
+  height: 100%;
+  padding: 1rem 0 1rem 1rem;
+}
+
+.header__logo-item {
+  text-decoration: none;
+  color: white;
+  font-family: "Lemonada", cursive;
+  font-size: 2.5rem;
+  margin-left: 0.8rem;
+}
+
+.header__item {
+  font-size: 1.8rem;
+  text-decoration: none;
+  color:white;
+  font-family: "Roboto", sans-serif;
+  margin-right: 3rem;
+}
+.header__item:hover {
+    color:#276EF1;
+}
+
+
+
+.header__button {
+  background-color: #276ef1;
+  border: 0;
+  padding: 1rem;
+  font-size: 1.8rem;
+  font-family: "Roboto", sans-serif;
+  color: white;
+  margin-right: 0.8rem;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+  .header__item {
+    font-size: 2rem;
+  }
+}
